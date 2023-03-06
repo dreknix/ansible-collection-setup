@@ -24,7 +24,7 @@
   ansible.builtin.lineinfile:
     dest: /etc/hosts
     regexp: "^{{ ansible_default_ipv4.address | replace('.','\\.') }}"
-    line: "{{ ansible_default_ipv4.address }}{{ '\t' }}{{ setup_fqdn }} {{ setup_hostname }}"
+    line: "{{ ansible_default_ipv4.address }}{{ '\t' }}{{ setup_fqdn }}{{ '\t' }}{{ setup_hostname }}"
     state: present
   when: "'notest' not in ansible_skip_tags"
 
