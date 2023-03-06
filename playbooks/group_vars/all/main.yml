@@ -1,0 +1,14 @@
+---
+
+setup_hostname: "{{ inventory_hostname }}"
+setup_fqdn: "{{ inventory_hostname }}.{{ ansible_dns['search'][0] }}"
+
+setup_timezone: "Europe/Berlin"
+
+setup_keymap: "de"
+setup_keymap_variant: "nodeadkeys"
+setup_keymap_string: "{{ setup_keymap }}-latin1-{{ setup_keymap_variant }}"
+
+setup_locale: "en_US.UTF-8"
+
+...

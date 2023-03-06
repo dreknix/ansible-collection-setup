@@ -1,0 +1,18 @@
+---
+
+#
+# Set locale
+#
+- name: Get locale
+  ansible.builtin.command: localectl status
+  register: localectl_status
+  changed_when: "'System Locale: LANG=' + setup_locale not in localectl_status.stdout"
+
+- name: Set locale
+  become: true
+  ansible.builtin.command:
+    localectl set-locale LANG={{ setup_locale }}
+  when: "'System Locale: LANG=' + setup_locale not in localectl_status.stdout"
+  changed_when: true
+
+...

@@ -10,6 +10,11 @@
 
   roles:
 
+    - role: dreknix.setup.config
+      tags:
+        - setup
+        - setup_config
+
     - role: dreknix.setup.upgrade
       tags:
         - setup

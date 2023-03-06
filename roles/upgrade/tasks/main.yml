@@ -2,10 +2,15 @@
 
 # Upgrade all packages
 
-- name: Update apt
+- name: Update apt if last update was >1 day
   become: true
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 86400
+
+- name: Ugrade apt packages
+  become: true
+  ansible.builtin.apt:
+    upgrade: yes
 
 ...
