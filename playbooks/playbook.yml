@@ -1,0 +1,18 @@
+---
+
+#
+# Setup computer
+#
+
+- name: Setup computer
+  hosts: '{{ target | default("all") }}'
+  gather_facts: true
+
+  roles:
+
+    - role: dreknix.setup.upgrade
+      tags:
+        - setup
+        - setup_upgrade
+
+...

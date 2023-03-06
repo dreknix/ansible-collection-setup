@@ -1,0 +1,66 @@
+---
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  PLAYBOOK: dreknix.setup.playbook
+  EXTRA_VARS: -e 'target=all'
+
+tasks:
+
+  lint:
+    desc: Check syntax of the playbook
+    cmds:
+      - yamllint .
+      - ansible-playbook {{.EXTRA_VARS}} --syntax-check {{.PLAYBOOK}}
+      - ansible-lint --profile production
+
+  check:
+    desc: Run playbook {{.PLAYBOOK}} in check mode
+    deps: [lint]
+    cmds:
+      - ansible-playbook --check {{.EXTRA_VARS}} {{.PLAYBOOK}}
+
+  diff:
+    desc: Run playbook {{.PLAYBOOK}} in check and diff mode
+    deps: [lint]
+    cmds:
+      - ansible-playbook --check --diff {{.EXTRA_VARS}} {{.PLAYBOOK}}
+
+  run:
+    desc: Run playbook {{.PLAYBOOK}}
+    deps: [lint]
+    cmds:
+      - ansible-playbook {{.EXTRA_VARS}} {{.PLAYBOOK}}
+
+  run:upgrade:
+    desc: Run {{.PLAYBOOK}} with tag upgrade
+    deps: [lint]
+    cmds:
+      - ansible-playbook {{.EXTRA_VARS}} --tag setup_upgrade {{.PLAYBOOK}}
+
+  molecule:lint:
+    desc: Lint the playbook with Molecule
+    cmds:
+      - molecule lint
+
+  molecule:converge:
+    desc: Converge the playbook with Molecule
+    cmds:
+      # $ task molecule:converge -- --debug -> CLI_ARGS=--debug
+      - molecule {{.CLI_ARGS}} converge
+
+  molecule:idempotence:
+    desc: Idempotence the playbook with Molecule
+    cmds:
+      # $ task molecule:idempotence -- --debug -> CLI_ARGS=--debug
+      - molecule {{.CLI_ARGS}} idempotence
+
+  molecule:test:
+    desc: Test the playbook with Molecule
+    cmds:
+      # $ task molecule:test -- --debug -> CLI_ARGS=--debug
+      - molecule {{.CLI_ARGS}} test
+
+...

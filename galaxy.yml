@@ -1,0 +1,25 @@
+---
+
+namespace: dreknix
+name: setup
+version: 1.0.0
+
+readme: README.md
+
+authors:
+  - dreknix https://github.com/dreknix
+
+description: Bunch of Ansible roles for setup a computer
+
+license:
+  - MIT
+
+tags: []
+
+dependencies: {}
+
+repository: https://github.com/dreknix/ansible-collections-setup
+
+build_ignore: []
+
+...
