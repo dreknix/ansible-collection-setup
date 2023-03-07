@@ -7,7 +7,7 @@ keyboard_model: "pc104"
 keyboard_layout: "us"
 
 # XKB keyboard variant: "nodeadkeys"
-keyboard_variant: "nodeadkeys"
+keyboard_variant: ""
 
 # XKB keyboard options
 keyboard_options: ""
