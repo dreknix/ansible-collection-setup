@@ -14,7 +14,8 @@ description: Bunch of Ansible roles for setup a computer
 license:
   - MIT
 
-tags: []
+tags:
+  - linux
 
 dependencies: {}
 
