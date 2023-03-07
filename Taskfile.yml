@@ -34,6 +34,30 @@ tasks:
     cmds:
       - ansible-playbook {{.EXTRA_VARS}} {{.PLAYBOOK}}
 
+  run:hostname:
+    desc: Run {{.PLAYBOOK}} with tag hostname
+    deps: [lint]
+    cmds:
+      - ansible-playbook {{.EXTRA_VARS}} --tag setup_hostname {{.PLAYBOOK}}
+
+  run:keyboard:
+    desc: Run {{.PLAYBOOK}} with tag keyboard
+    deps: [lint]
+    cmds:
+      - ansible-playbook {{.EXTRA_VARS}} --tag setup_keyboard {{.PLAYBOOK}}
+
+  run:locale:
+    desc: Run {{.PLAYBOOK}} with tag locale
+    deps: [lint]
+    cmds:
+      - ansible-playbook {{.EXTRA_VARS}} --tag setup_locale {{.PLAYBOOK}}
+
+  run:timezone:
+    desc: Run {{.PLAYBOOK}} with tag timezone
+    deps: [lint]
+    cmds:
+      - ansible-playbook {{.EXTRA_VARS}} --tag setup_timezone {{.PLAYBOOK}}
+
   run:upgrade:
     desc: Run {{.PLAYBOOK}} with tag upgrade
     deps: [lint]
@@ -44,6 +68,18 @@ tasks:
     desc: Lint the playbook with Molecule
     cmds:
       - molecule lint
+
+  molecule:create:
+    desc: Create Molecule instances
+    cmds:
+      # $ task molecule:create -- --debug -> CLI_ARGS=--debug
+      - molecule {{.CLI_ARGS}} create
+
+  molecule:destroy:
+    desc: Destroy Molecule instances
+    cmds:
+      # $ task molecule:destroy -- --debug -> CLI_ARGS=--debug
+      - molecule {{.CLI_ARGS}} destroy
 
   molecule:converge:
     desc: Converge the playbook with Molecule

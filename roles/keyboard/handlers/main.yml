@@ -1,0 +1,8 @@
+---
+
+- name: Reconfigure keyboard configuration
+  listen: dpkg-reconfigure keyboard-configuration
+  become: true
+  ansible.builtin.command: /usr/sbin/dpkg-reconfigure -f noninteractive keyboard-configuration
+
+...

@@ -1,0 +1,16 @@
+---
+
+# Set the host name to the name used in the inventory (should not be FQDN)
+hostname: "{{ inventory_hostname }}"
+
+# Get the primary IP address via DNS (if not possible use Ansible facts)
+ip_addr: "{{
+  lookup('community.general.dig', '{{ inventory_hostname }}', real_empty='true', errors='ignore') |
+  default(ansible_default_ipv4.address, true) }}"
+
+# Get the FQDN via DNS (if not possible use Ansible facts)
+fqdn: "{{
+  lookup('community.general.dig', '{{ ip_addr }}/PTR', real_empty='true', errors='ignore') |
+  default(inventory_hostname + '.' + ansible_dns['search'][0], true) }}"
+
+...

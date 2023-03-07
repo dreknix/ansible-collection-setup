@@ -1,0 +1,14 @@
+---
+
+- name: Install package 'tzdata'
+  become: true
+  ansible.builtin.apt:
+    name: tzdata
+    state: present
+
+- name: Configure timezone
+  become: true
+  community.general.timezone:
+    name: "{{ timezone }}"
+
+...

@@ -1,0 +1,8 @@
+---
+
+# List of available time zones can be found in `/usr/share/zoneinfo` or by
+# invoking `timedatectl list-timezones`
+
+timezone: "Europe/London"
+
+...

@@ -1,0 +1,27 @@
+---
+
+- name: Set hostname (1/2)
+  become: true
+  ansible.builtin.hostname:
+    name: "{{ hostname }}"
+  notify: Reboot host
+
+- name: Set hostname (2/2)
+  become: true
+  ansible.builtin.copy:
+    content: "{{ hostname }}{{ '\n' }}"
+    dest: /etc/hostname
+    mode: '0644'
+  notify: Reboot host
+
+# In Docker container `/etc/hosts` can not be changed, i.e. during Molecule
+- name: Update "/etc/hosts"
+  become: true
+  ansible.builtin.lineinfile:
+    dest: /etc/hosts
+    regexp: "^{{ ip_addr | replace('.', '\\.') }}"
+    line: "{{ ip_addr }}{{ '\t' }}{{ fqdn }}{{ '\t' }}{{ hostname }}"
+    state: present
+  when: "'notest' not in ansible_skip_tags"
+
+...

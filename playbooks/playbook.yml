@@ -10,10 +10,25 @@
 
   roles:
 
-    - role: dreknix.setup.config
+    - role: dreknix.setup.hostname
       tags:
         - setup
-        - setup_config
+        - setup_hostname
+
+    - role: dreknix.setup.keyboard
+      tags:
+        - setup
+        - setup_keyboard
+
+    - role: dreknix.setup.locale
+      tags:
+        - setup
+        - setup_locale
+
+    - role: dreknix.setup.timezone
+      tags:
+        - setup
+        - setup_timezone
 
     - role: dreknix.setup.upgrade
       tags:

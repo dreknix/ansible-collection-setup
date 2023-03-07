@@ -1,0 +1,22 @@
+---
+
+- name: Install package "keyboard-configuration"
+  become: true
+  ansible.builtin.apt:
+    name:
+      - keyboard-configuration
+      - console-setup
+    state: present
+
+- name: Write keyboard configuration
+  become: true
+  ansible.builtin.template:
+    src: keyboard.j2
+    dest: /etc/default/keyboard
+    owner: root
+    group: root
+    mode: "u=rw,go=r"
+  notify:
+    - dpkg-reconfigure keyboard-configuration
+
+...

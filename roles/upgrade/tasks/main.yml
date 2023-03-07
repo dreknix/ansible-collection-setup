@@ -11,6 +11,6 @@
 - name: Ugrade apt packages
   become: true
   ansible.builtin.apt:
-    upgrade: yes
+    upgrade: true
 
 ...

@@ -1,0 +1,18 @@
+---
+
+# XKB keyboard model: "pc104", "pc105", ...
+keyboard_model: "pc104"
+
+# XKB keyboard layout: "us", "de", ...
+keyboard_layout: "us"
+
+# XKB keyboard variant: "nodeadkeys"
+keyboard_variant: "nodeadkeys"
+
+# XKB keyboard options
+keyboard_options: ""
+
+# Behavior of <BackSpace> and <Delete>
+keyboard_backspace: "guess"
+
+...

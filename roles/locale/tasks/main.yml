@@ -1,0 +1,26 @@
+---
+
+- name: Install package 'locales'
+  become: true
+  ansible.builtin.apt:
+    name:
+      - locales
+    state: present
+
+- name: Install locale definitions
+  become: true
+  community.general.locale_gen:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ locale_list }}"
+
+- name: Write locale configuration
+  become: true
+  ansible.builtin.template:
+    src: locale.j2
+    dest: /etc/default/locale
+    owner: root
+    group: root
+    mode: "u=rw,go=r"
+
+...

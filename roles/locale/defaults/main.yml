@@ -1,0 +1,26 @@
+---
+
+# List of supported locales
+locale_list:
+  - "en_GB.UTF-8"
+  - "en_US.UTF-8"
+
+locale_lang: "en_US.UTF-8"
+locale_language: ""
+
+locale_address: ""
+locale_collate: ""
+locale_ctype: ""
+locale_identification: ""
+locale_measurement: ""
+locale_messages: ""
+locale_monetary: ""
+locale_name: ""
+locale_numeric: ""
+locale_paper: ""
+locale_response: ""
+locale_telephone: ""
+locale_time: ""
+locale_all: ""
+
+...
