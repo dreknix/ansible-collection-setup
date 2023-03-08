@@ -7,30 +7,55 @@
 - name: Setup computer
   hosts: '{{ target | default("all") }}'
   gather_facts: true
+  vars_files:
+    - hostname-ip.yml
 
-  roles:
+  tasks:
 
-    - role: dreknix.setup.hostname
+    - name: Include role dreknix.setup.hostname
+      ansible.builtin.include_role:
+        name: dreknix.setup.hostname
+      when: configure_hostname | default(true) | bool
       tags:
         - setup
         - setup_hostname
 
-    - role: dreknix.setup.keyboard
+    - name: Include role dreknix.setup.keyboard
+      ansible.builtin.include_role:
+        name: dreknix.setup.keyboard
+      when: configure_keyboard | default(true) | bool
       tags:
         - setup
         - setup_keyboard
 
-    - role: dreknix.setup.locale
+    - name: Include role dreknix.setup.locale
+      ansible.builtin.include_role:
+        name: dreknix.setup.locale
+      when: configure_locale | default(true) | bool
       tags:
         - setup
         - setup_locale
 
-    - role: dreknix.setup.timezone
+    - name: Include role dreknix.setup.timezone
+      ansible.builtin.include_role:
+        name: dreknix.setup.timezone
+      when: configure_timezone | default(true) | bool
       tags:
         - setup
         - setup_timezone
 
-    - role: dreknix.setup.upgrade
+    - name: Include role dreknix.setup.sshd
+      ansible.builtin.include_role:
+        name: dreknix.setup.sshd
+      when: configure_sshd | default(true) | bool
+      tags:
+        - setup
+        - setup_sshd
+
+    - name: Include role dreknix.setup.upgrade
+      ansible.builtin.include_role:
+        name: dreknix.setup.upgrade
+      when: configure_upgrade | default(true) | bool
       tags:
         - setup
         - setup_upgrade

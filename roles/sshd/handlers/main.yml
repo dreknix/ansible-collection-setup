@@ -1,0 +1,12 @@
+---
+
+#
+# Do not restart SSH server in Molecule test
+#
+- name: Restart openssh-server
+  ansible.builtin.service:
+    name: openssh-server
+    state: restarted
+  when: "'notest' not in ansible_skip_tags"
+
+...

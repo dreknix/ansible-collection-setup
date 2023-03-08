@@ -1,0 +1,43 @@
+---
+
+# Port: 22
+sshd_port: 22
+
+# AddressFamily: any/inet/inet6
+# sshd_address_family: any
+sshd_address_family: "inet"
+
+# ListenAddress: 0.0.0.0/::
+sshd_listen_addresses:
+  - "{{ ip_addr }}"
+  # - 0.0.0.0
+  # - ::
+
+# PermitRootLogin: prohibit-password/no/yes
+sshd_permit_root_login: "prohibit-password"
+
+# PasswordAuthentication no/yes
+sshd_password_authentication: "no"
+
+# PermitEmptyPasswords no/yes
+sshd_permit_empty_passwords: "no"
+
+# StrictModes yes
+sshd_strict_modes: "yes"
+
+# PubkeyAuthentication yes
+sshd_pubkey_authentication: "yes"
+
+# PrintMotd no
+sshd_print_motd: "no"
+
+# PrintLastLog no
+sshd_print_last_log: "no"
+
+# Restricting root login to network
+sshd_restrict_root_login_to_networks:
+  - 10.0.0.0/8
+  - 172.16.0.0/20
+  - 192.168.0.0/16
+
+...

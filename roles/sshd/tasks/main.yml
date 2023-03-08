@@ -1,0 +1,60 @@
+---
+
+- name: Install package 'openssh-server'
+  become: true
+  ansible.builtin.apt:
+    name:
+      - openssh-server
+    state: present
+
+- name: Ensure ssh_config.d config files is enabled
+  become: true
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^\\s*#?\\s*Include\\s+/etc/ssh/sshd_config.d/\\*.conf"
+    line: "Include /etc/ssh/sshd_config.d/*.conf"
+  notify: Restart openssh-server
+
+- name: Configure sshd
+  become: true
+  ansible.builtin.template:
+    src: ansible-sshd.conf.j2
+    dest: /etc/ssh/sshd_config.d/00-ansible-sshd.conf
+    owner: root
+    group: root
+    mode: "u=rw,go=r"
+  notify: Restart openssh-server
+
+- name: Configure Accress Control Table for restricting root login
+  become: true
+  ansible.builtin.template:
+    src: access.conf.j2
+    dest: /etc/security/access.conf
+    owner: root
+    group: root
+    mode: "u=rw,go=r"
+
+- name: Enable Access Control Table in PAM
+  become: true
+  ansible.builtin.replace:
+    path: /etc/pam.d/sshd
+    regexp: "^\\s*#?\\s*(account\\s+required\\s+pam_access\\.so.*)"
+    replace: "\\1"
+
+- name: Install package 'fail2ban'
+  become: true
+  ansible.builtin.apt:
+    name:
+      - fail2ban
+    state: present
+
+- name: Configure jail2ban for sshd
+  become: true
+  ansible.builtin.template:
+    src: ansible-fail2ban-sshd.conf.j2
+    dest: /etc/fail2ban/jail.d/ansible-sshd.conf
+    owner: root
+    group: root
+    mode: "u=rw,go=r"
+
+...

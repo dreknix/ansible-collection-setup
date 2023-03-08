@@ -1,0 +1,19 @@
+{{ ansible_managed | comment }}
+
+Port {{ sshd_port | default("22") }}
+AddressFamily {{ sshd_address_family }}
+{% for sshd_listen_address in sshd_listen_addresses %}
+ListenAddress {{ sshd_listen_address }}
+{% endfor %}
+
+PermitRootLogin {{ sshd_permit_root_login | default("prohibit-password") }}
+
+PasswordAuthentication {{ sshd_password_authentication | default("no") }}
+PermitEmptyPasswords {{ sshd_permit_empty_passwords | default("no") }}
+StrictModes {{ sshd_strict_modes | default("yes") }}
+PubkeyAuthentication {{ sshd_pubkey_authentication | default("yes") }}
+
+PrintMotd {{ sshd_print_motd | default("no") }}
+PrintLastLog {{ sshd_print_last_log | default("no") }}
+
+UsePAM yes

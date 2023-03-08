@@ -1,0 +1,16 @@
+{{ ansible_managed | comment }}
+
+[DEFAULT]
+ignoreip = 127.0.0.0/8 ::1 {{ fail2ban_ignore_network | default("") }}
+
+# Override /etc/fail2ban/jail.d/00-firewalld.conf:
+banaction = iptables-multiport
+
+[sshd]
+enabled = true
+# 'bantime' is the number of seconds that a host is banned
+bantime = 3600
+# a host is banned if it has generated 'maxretry' during the last 'findtime'
+# seconds
+maxretry = 6
+findtime = 600

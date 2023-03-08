@@ -1,0 +1,7 @@
+{{ ansible_managed | comment }}
+
+{% for sshd_restrict_root_login_to_network in sshd_restrict_root_login_to_networks %}
++ : root : {{ sshd_restrict_root_login_to_network }}
+{% endfor %}
++ : root : LOCAL
+- : root : ALL
