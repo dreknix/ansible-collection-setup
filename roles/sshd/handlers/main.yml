@@ -9,4 +9,13 @@
     state: restarted
   when: "'notest' not in ansible_skip_tags"
 
+#
+# Do not restart fail2ban server in Molecule test
+#
+- name: Restart fail2ban
+  ansible.builtin.service:
+    name: fail2ban
+    state: restarted
+  when: "'notest' not in ansible_skip_tags"
+
 ...
