@@ -5,7 +5,7 @@
 #
 - name: Restart openssh-server
   ansible.builtin.service:
-    name: openssh-server
+    name: sshd
     state: restarted
   when: "'notest' not in ansible_skip_tags"
 
