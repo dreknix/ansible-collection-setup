@@ -15,6 +15,10 @@
     - name: Include role dreknix.setup.hostname
       ansible.builtin.include_role:
         name: dreknix.setup.hostname
+        apply:
+          tags:
+            - setup
+            - setup_hostname
       when: configure_hostname | default(true) | bool
       tags:
         - setup
@@ -23,6 +27,10 @@
     - name: Include role dreknix.setup.keyboard
       ansible.builtin.include_role:
         name: dreknix.setup.keyboard
+        apply:
+          tags:
+            - setup
+            - setup_keyboard
       when: configure_keyboard | default(true) | bool
       tags:
         - setup
@@ -31,6 +39,10 @@
     - name: Include role dreknix.setup.locale
       ansible.builtin.include_role:
         name: dreknix.setup.locale
+        apply:
+          tags:
+            - setup
+            - setup_locale
       when: configure_locale | default(true) | bool
       tags:
         - setup
@@ -39,6 +51,10 @@
     - name: Include role dreknix.setup.timezone
       ansible.builtin.include_role:
         name: dreknix.setup.timezone
+        apply:
+          tags:
+            - setup
+            - setup_timezone
       when: configure_timezone | default(true) | bool
       tags:
         - setup
@@ -47,6 +63,10 @@
     - name: Include role dreknix.setup.sshd
       ansible.builtin.include_role:
         name: dreknix.setup.sshd
+        apply:
+          tags:
+            - setup
+            - setup_sshd
       when: configure_sshd | default(true) | bool
       tags:
         - setup
@@ -55,6 +75,10 @@
     - name: Include role dreknix.setup.upgrade
       ansible.builtin.include_role:
         name: dreknix.setup.upgrade
+        apply:
+          tags:
+            - setup
+            - setup_upgrade
       when: configure_upgrade | default(true) | bool
       tags:
         - setup
