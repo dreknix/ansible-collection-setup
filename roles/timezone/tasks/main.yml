@@ -10,5 +10,6 @@
   become: true
   community.general.timezone:
     name: "{{ timezone }}"
+  notify: Reboot host
 
 ...
