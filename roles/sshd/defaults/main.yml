@@ -7,11 +7,8 @@ sshd_port: 22
 # sshd_address_family: any
 sshd_address_family: "inet"
 
-# ListenAddress: 0.0.0.0/::
-sshd_listen_addresses:
-  - "{{ ip_addr }}"
-  # - 0.0.0.0
-  # - ::
+# ListenAddress: append current primary IP address
+sshd_listen_addresses: "{{ sshd_listen_addresses | default([]) + [ip_addr] }}"
 
 # PermitRootLogin: prohibit-password/no/yes
 sshd_permit_root_login: "prohibit-password"
