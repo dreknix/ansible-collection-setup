@@ -1,0 +1,25 @@
+---
+
+krb5_group_name: krb5user
+krb5_group_id: 5000
+
+krb5_ticket_lifetime: 36000
+krb5_renew_lifetime: 3days
+krb5_default_realm: EXAMPLE.COM
+krb5_ccache_type: 2
+krb5_dns_lookup_realm: false
+krb5_dns_lookup_kdc: false
+
+krb5_realms:
+  - name: EXAMPLE.COM
+    mappings:
+      - kdc = dc1.example.com
+      - kdc = dc2.example.com
+      - admin_server = dc2.example.com
+
+krb5_domain_realms:
+  - mail.example.com. = EXAMPLE.COM
+  - dc1.example.com = EXAMPLE.COM
+  - dc2.example.com = EXAMPLE.COM
+
+...

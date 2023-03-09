@@ -18,7 +18,7 @@
             - name: Include role dreknix.setup.hostname
               ansible.builtin.include_role:
                 name: dreknix.setup.hostname
-          when: configure_hostname | default(true) | bool
+          when: setup_configure_hostname | default(true) | bool
           tags:
             - setup_hostname
 
@@ -26,7 +26,7 @@
             - name: Include role dreknix.setup.keyboard
               ansible.builtin.include_role:
                 name: dreknix.setup.keyboard
-          when: configure_keyboard | default(true) | bool
+          when: setup_configure_keyboard | default(true) | bool
           tags:
             - setup_keyboard
 
@@ -34,7 +34,7 @@
             - name: Include role dreknix.setup.locale
               ansible.builtin.include_role:
                 name: dreknix.setup.locale
-          when: configure_locale | default(true) | bool
+          when: setup_configure_locale | default(true) | bool
           tags:
             - setup_locale
 
@@ -42,7 +42,7 @@
             - name: Include role dreknix.setup.timezone
               ansible.builtin.include_role:
                 name: dreknix.setup.timezone
-          when: configure_timezone | default(true) | bool
+          when: setup_configure_timezone | default(true) | bool
           tags:
             - setup_timezone
 
@@ -50,7 +50,15 @@
             - name: Include role dreknix.setup.sshd
               ansible.builtin.include_role:
                 name: dreknix.setup.sshd
-          when: configure_sshd | default(true) | bool
+          when: setup_configure_sshd | default(true) | bool
+          tags:
+            - setup_sshd
+
+        - block:
+            - name: Include role dreknix.setup.krb5
+              ansible.builtin.include_role:
+                name: dreknix.setup.krb5
+          when: setup_configure_krb5 | default(false) | bool
           tags:
             - setup_sshd
 
@@ -58,7 +66,7 @@
             - name: Include role dreknix.setup.upgrade
               ansible.builtin.include_role:
                 name: dreknix.setup.upgrade
-          when: configure_upgrade | default(true) | bool
+          when: setup_configure_upgrade | default(true) | bool
           tags:
             - setup_upgrade
 

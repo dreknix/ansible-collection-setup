@@ -1,0 +1,66 @@
+---
+
+- name: Install package 'krb5-user' and 'libpam-krb5'
+  become: true
+  ansible.builtin.apt:
+    name:
+      - krb5-user
+      - libpam-krb5
+    state: present
+
+- name: Set krb5.conf
+  become: true
+  ansible.builtin.template:
+    src: "krb5.conf.j2"
+    dest: "/etc/krb5.conf"
+    force: true
+    owner: "root"
+    group: "root"
+    mode: 0644
+
+- name: Remove auth lines from /etc/pam.d/common-auth
+  ansible.builtin.replace:
+    path: /etc/pam.d/common-auth
+    regexp: '^(auth.*\[(success|default)=.*)'
+    replace: '# \1'
+
+- name: Add stronger krb5 auth to /etc/pamd.d/common-auth
+  ansible.builtin.blockinfile:
+    path: /etc/pam.d/common-auth
+    marker: "# {mark} ANSIBLE MANGED BLOCK"
+    insertbefore: "^# here's the fallback if no module succeeds"
+    block: |
+      auth        sufficient    pam_unix.so nullok try_first_pass
+      auth        requisite     pam_succeed_if.so uid >= {{ krb5_group_id | default('1000') }} quiet
+      auth        sufficient    pam_krb5.so use_first_pass
+
+- name: Create krb5 user group
+  ansible.builtin.group:
+    name: krb5_group_name | default('krb5user')
+    gid: krb5_group_id | default('1000')
+    state: present
+
+- name: Get list of krb5 users for current host
+  ansible.builtin.set_facts:
+    user_list: "{{
+                   krb5_users | default([]) |
+                     selectattr('hosts', 'equalto', []) |
+                     selectattr('id', 'defined') |
+                     map(attribute='id') |
+                     list
+                   + krb5_users | default([]) |
+                     selectattr('hosts', 'defined') |
+                     selectattr('hosts', 'issuperset', [hostname]) |
+                     selectattr('id', 'defined') |
+                     map(attribute='id') |
+                     list
+                }}"
+
+- name: Create all krb5 users on current host
+  ansible.builtin.user:
+    name: item
+    group: krb5_group_name | default('krb5user')
+    state: present
+  with_items: "{{ user_list }}"
+
+...

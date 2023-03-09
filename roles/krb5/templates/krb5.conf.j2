@@ -1,0 +1,32 @@
+{{ ansible_managed | comment }}
+
+[libdefaults]
+   ticket_lifetime  = {{ krb5_ticket_lifetime | default('36000') }}
+   renew_lifetime   = {{ krb5_renew_lifetime | default('3days') }}
+   default_realm    = {{ krb5_default_realm }}
+   ccache_type      = {{ krb5_ccache_type | default('2') }}
+   dns_lookup_realm = {{ krb5_dns_lookup_realm | default('false') }}
+   dns_lookup_kdc   = {{ krb5_dns_lookup_kdc | default('false') }}
+
+[realms]
+{% for krb5_realm in krb5_realms %}
+{{ krb5_realm.name }} = {
+{% for krb5_mapping in krb5_realm.mappings %}
+    {{ krb5_mapping }}
+{% endfor %}
+}
+{% endfor %}
+
+[domain_realm]
+{% for krb5_domain_realm in krb5_domain_realms %}
+    {{ krb5_domain_realm }}
+{% endfor %}
+{% if krb5_ca_paths is defined %}
+
+[capaths]
+{% for krb5_ca_path in krb5_ca_paths %}
+{{ krb5_ca_path.from }} = {
+    {{ krb5_ca_path.to }} = .
+}
+{% endfor %}
+{% endif %}
