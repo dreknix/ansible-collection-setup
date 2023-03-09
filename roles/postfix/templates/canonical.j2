@@ -1,1 +1,4 @@
 root {{ postfix_email_root }}
+{% for user in user_list %}
+{{ user }} x@example.org
+{% endfor %}

@@ -38,6 +38,22 @@
     label: "{{ item.line | regex_replace('([^ ]*).*', '\\1') }}"
   notify: Restart postfix
 
+- name: Get list of krb5 users for current host
+  ansible.builtin.set_fact:
+    user_list: "{{
+                   krb5_users | default([]) |
+                     selectattr('hosts', 'equalto', []) |
+                     selectattr('id', 'defined') |
+                     map(attribute='id') |
+                     list
+                   + krb5_users | default([]) |
+                     selectattr('hosts', 'defined') |
+                     selectattr('hosts', 'issuperset', [hostname]) |
+                     selectattr('id', 'defined') |
+                     map(attribute='id') |
+                     list
+                }}"
+
 - name: Update Postfix canonical map
   ansible.builtin.template:
     src: canonical.j2
