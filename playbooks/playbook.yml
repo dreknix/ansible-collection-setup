@@ -65,7 +65,7 @@
         - name: Block dreknix.setup.krb5
           when: setup_configure_krb5 | default(false) | bool
           tags:
-            - setup_sshd
+            - setup_krb5
           block:
             - name: Include role dreknix.setup.krb5
               ansible.builtin.include_role:
