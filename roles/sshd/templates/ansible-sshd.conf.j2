@@ -2,7 +2,7 @@
 
 Port {{ sshd_port | default("22") }}
 AddressFamily {{ sshd_address_family }}
-{% for sshd_listen_address in sshd_listen_addresses %}
+{% for sshd_listen_address in sshd_listen_addresses | default([]) + [ip_addr]%}
 ListenAddress {{ sshd_listen_address }}
 {% endfor %}
 
