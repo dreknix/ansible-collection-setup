@@ -31,17 +31,23 @@
     insertbefore: "^# here's the fallback if no module succeeds"
     block: |
       auth        sufficient    pam_unix.so nullok try_first_pass
-      auth        requisite     pam_succeed_if.so uid >= {{ krb5_group_id | default('1000') }} quiet
+      auth        requisite     pam_succeed_if.so gid eq {{ krb5_group_id | default('1000') | int }} quiet
       auth        sufficient    pam_krb5.so use_first_pass
 
 - name: Create krb5 user group
   ansible.builtin.group:
-    name: krb5_group_name | default('krb5user')
-    gid: krb5_group_id | default('1000')
+    name: "{{ krb5_group_name | default('krb5user') | string }}"
+    gid: "{{ krb5_group_id | default('1000') | int }}"
     state: present
 
+- name: Change default shell to /bin/bash
+  ansible.builtin.lineinfile:
+    dest: /etc/default/useradd
+    regexp: "^SHELL="
+    line: "SHELL=/bin/bash"
+
 - name: Get list of krb5 users for current host
-  ansible.builtin.set_facts:
+  ansible.builtin.set_fact:
     user_list: "{{
                    krb5_users | default([]) |
                      selectattr('hosts', 'equalto', []) |
@@ -58,9 +64,24 @@
 
 - name: Create all krb5 users on current host
   ansible.builtin.user:
-    name: item
-    group: krb5_group_name | default('krb5user')
+    name: "{{ item | string }}"
+    group: "{{ krb5_group_name | default('krb5user') | string }}"
+    comment: "{{ (krb5_users | selectattr('id', 'equalto', item) | list | first).name }}"
+    password_lock: true
+    create_home: true
     state: present
   with_items: "{{ user_list }}"
+
+- name: Get list of all krb5 users on current host
+  ansible.builtin.shell: |
+    getent passwd | awk -F: '$4 == {{ krb5_group_id | default('1000') | int }} {print $1}'
+  register: current_user_list
+  changed_when: false
+
+- name: Remove old krb5 users
+  ansible.builtin.user:
+    name: "{{ item | string }}"
+    state: absent
+  with_items: "{{ current_user_list.stdout_lines | difference(user_list) | list }}"
 
 ...
