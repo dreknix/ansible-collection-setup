@@ -71,6 +71,15 @@
               ansible.builtin.include_role:
                 name: dreknix.setup.krb5
 
+        - name: Block dreknix.setup.postfix
+          when: setup_configure_postfix | default(true) | bool
+          tags:
+            - setup_postfix
+          block:
+            - name: Include role dreknix.setup.postfix
+              ansible.builtin.include_role:
+                name: dreknix.setup.postfix
+
         - name: Block dreknix.setup.upgrade
           when: setup_configure_upgrade | default(true) | bool
           tags:

@@ -1,0 +1,16 @@
+---
+
+#
+# Do not restart postfix server in Molecule test
+#
+- name: Restart postfix
+  ansible.builtin.service:
+    name: postfix
+    state: restarted
+  when: "'notest' not in ansible_skip_tags"
+
+- name: Update canonical_map with postmap
+  ansible.builtin.command:
+    "postmap {{ postfix_database_type }}:{{ postfix_canonical_map }}"
+
+...

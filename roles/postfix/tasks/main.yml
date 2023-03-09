@@ -1,0 +1,64 @@
+---
+
+# TODO: - name: Check if 'mailname' is equal to 'hostname --fqdn'
+
+- name: Install package 'postfix' and 'mailutils'
+  ansible.builtin.package:
+    name:
+      - postfix
+      - mailutils
+    state: present
+
+- name: Update Postfix configuration
+  ansible.builtin.lineinfile:
+    dest: "{{ postfix_config }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - regexp: "^\\s*#?\\s*canonical_classes\\s*=\\s*.*$"
+      line: "canonical_classes = {{ postfix_canonical_classes }}"
+    - regexp: "^\\s*#?\\s*canonical_maps\\s*=\\s*.*$"
+      line: "canonical_maps = {{ postfix_database_type }}:{{ postfix_canonical_map }}"
+    - regexp: "^\\s*#?\\s*inet_protocols\\s*=\\s*.*$"
+      line: "inet_protocols = {{ postfix_inet_protocols }}"
+    - regexp: "^\\s*#?\\s*masquerade_classes\\s*=\\s*.*$"
+      line: "masquerade_classes = {{ postfix_masquerade_classes }}"
+    - regexp: "^\\s*#?\\s*masquerade_domains\\s*=\\s*.*$"
+      line: "masquerade_domains = {{ postfix_masquerade_domains }}"
+    - regexp: "^\\s*#?\\s*masquerade_exceptions\\s*=\\s*.*$"
+      line: "masquerade_exceptions = {{ postfix_masquerade_exceptions }}"
+    - regexp: "^\\s*#?\\s*mydestination\\s*=\\s*.*$"
+      line: "mydestination = {{ postfix_mydestination }}"
+    - regexp: "^\\s*#?\\s*myorigin\\s*=\\s*.*$"
+      line: "myorigin = {{ postfix_myorigin }}"
+    - regexp: "^\\s*#?\\s*relayhost\\s*=\\s*.*$"
+      line: "relayhost = {{ postfix_relayhost }}"
+  loop_control:
+    label: "{{ item.line | regex_replace('([^ ]*).*', '\\1') }}"
+  notify: Restart postfix
+
+- name: Update Postfix canonical map
+  ansible.builtin.template:
+    src: canonical.j2
+    dest: "{{ postfix_canonical_map }}"
+    mode: "0644"
+  notify:
+    - Update canonical_map with postmap
+    - Restart postfix
+
+- name: Update Mailname
+  ansible.builtin.template:
+    src: mailname.j2
+    dest: "{{ postfix_mailname }}"
+    mode: "0644"
+  notify:
+    - Restart postfix
+
+- name: Ensure Postfix is started and enabled at boot
+  ansible.builtin.service:
+    name: postfix
+    state: started
+    enabled: true
+
+...
