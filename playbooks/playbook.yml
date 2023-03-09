@@ -12,65 +12,72 @@
 
   tasks:
 
-    - block:
+    - name: Block dreknix.setup
+      tags:
+        - setup
+      block:
 
-        - block:
-            - name: Include role dreknix.setup.hostname
-              ansible.builtin.include_role:
-                name: dreknix.setup.hostname
+        - name: Block dreknix.setup.hostname
           when: setup_configure_hostname | default(true) | bool
           tags:
             - setup_hostname
-
-        - block:
-            - name: Include role dreknix.setup.keyboard
+          block:
+            - name: Include role dreknix.setup.hostname
               ansible.builtin.include_role:
-                name: dreknix.setup.keyboard
+                name: dreknix.setup.hostname
+
+        - name: Block dreknix.setup.keyboard
           when: setup_configure_keyboard | default(true) | bool
           tags:
             - setup_keyboard
-
-        - block:
-            - name: Include role dreknix.setup.locale
+          block:
+            - name: Include role dreknix.setup.keyboard
               ansible.builtin.include_role:
-                name: dreknix.setup.locale
+                name: dreknix.setup.keyboard
+
+        - name: Block dreknix.setup.locale
           when: setup_configure_locale | default(true) | bool
           tags:
             - setup_locale
-
-        - block:
-            - name: Include role dreknix.setup.timezone
+          block:
+            - name: Include role dreknix.setup.locale
               ansible.builtin.include_role:
-                name: dreknix.setup.timezone
+                name: dreknix.setup.locale
+
+        - name: Block dreknix.setup.timezone
           when: setup_configure_timezone | default(true) | bool
           tags:
             - setup_timezone
-
-        - block:
-            - name: Include role dreknix.setup.sshd
+          block:
+            - name: Include role dreknix.setup.timezone
               ansible.builtin.include_role:
-                name: dreknix.setup.sshd
+                name: dreknix.setup.timezone
+
+        - name: Block dreknix.setup.sshd
           when: setup_configure_sshd | default(true) | bool
           tags:
             - setup_sshd
-
-        - block:
-            - name: Include role dreknix.setup.krb5
+          block:
+            - name: Include role dreknix.setup.sshd
               ansible.builtin.include_role:
-                name: dreknix.setup.krb5
+                name: dreknix.setup.sshd
+
+        - name: Block dreknix.setup.krb5
           when: setup_configure_krb5 | default(false) | bool
           tags:
             - setup_sshd
-
-        - block:
-            - name: Include role dreknix.setup.upgrade
+          block:
+            - name: Include role dreknix.setup.krb5
               ansible.builtin.include_role:
-                name: dreknix.setup.upgrade
+                name: dreknix.setup.krb5
+
+        - name: Block dreknix.setup.upgrade
           when: setup_configure_upgrade | default(true) | bool
           tags:
             - setup_upgrade
-
-      tags:
-        - setup
+          block:
+            - name: Include role dreknix.setup.upgrade
+              ansible.builtin.include_role:
+                name: dreknix.setup.upgrade
 
 ...
