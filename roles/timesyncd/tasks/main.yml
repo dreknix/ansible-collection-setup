@@ -11,7 +11,7 @@
   become: true
   ansible.builtin.template:
     src: timesyncd-local.conf.j2
-    dest: timesyncd_config_file
+    dest: "{{ timesyncd_config_file }}"
     owner: root
     group: root
     mode: "u=rw,go=r"
