@@ -74,7 +74,7 @@
 
 - name: Get list of all krb5 users on current host
   ansible.builtin.shell: |
-    getent passwd | awk -F: '$4 == {{ krb5_group_id | default('1000') | int }} {print $1}'
+    set -o pipefail && getent passwd | awk -F: '$4 == {{ krb5_group_id | default('1000') | int }} {print $1}'
   register: current_user_list
   changed_when: false
 
