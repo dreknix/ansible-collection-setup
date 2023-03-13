@@ -1,0 +1,13 @@
+---
+
+- name: Checkout root dotfiles
+  vars:
+    git_parameters: >
+      --git-dir="{{ ansible_env.HOME }}/.cfg" --work-tree="{{ ansible_env.HOME }}/"
+  ansible.builtin.command: "{{ item }}"
+  with_items:
+    - git {{ git_parameters }} checkout
+    - git {{ git_parameters }} config --local status.showUntrackedFiles no
+  when: gitclone.changed and gitclone.before == none
+
+...

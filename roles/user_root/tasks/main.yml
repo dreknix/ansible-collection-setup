@@ -22,6 +22,8 @@
   register: gitclone
   changed_when: gitclone.changed and gitclone.before == none
   when: not dotfiles.stat.exists
+  notify:
+    - Checkout root dotfiles
 
 - name: Update root dotfiles  # noqa command-instead-of-module
   ansible.builtin.shell: >
