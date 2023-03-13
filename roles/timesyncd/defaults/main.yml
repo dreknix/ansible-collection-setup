@@ -1,0 +1,9 @@
+---
+
+timesyncd_config_file: /etc/systemd/timesyncd.conf.d/local.conf
+
+timesyncd_ntp_servers: ntp.example.com
+
+timesyncd_ntp_fallback_servers: 0.pool.ntp.org 1.pool.ntp.org
+
+...

@@ -1,0 +1,5 @@
+{{ ansible_managed | comment }}
+
+[Time]
+NTP={{ timesyncd_ntp_servers }}
+FallbackNTP={{ timesyncd_ntp_fallback_servers }}

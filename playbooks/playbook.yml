@@ -53,6 +53,16 @@
               ansible.builtin.include_role:
                 name: dreknix.setup.timezone
 
+        - name: Block dreknix.setup.timesyncd
+          when: setup_configure_timesyncd | default(true) | bool
+                and 'timesyncd_clients' in group_names
+          tags:
+            - setup_timesyncd
+          block:
+            - name: Include role dreknix.setup.timesyncd
+              ansible.builtin.include_role:
+                name: dreknix.setup.timesyncd
+
         - name: Block dreknix.setup.sshd
           when: setup_configure_sshd | default(true) | bool
           tags:

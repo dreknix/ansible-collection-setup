@@ -1,0 +1,12 @@
+---
+
+#
+# Do not restart systemd-timesyncd in Molecule test
+#
+- name: Restart systemd-timesyncd
+  ansible.builtin.service:
+    name: systemd-timesyncd
+    state: restarted
+  when: "'notest' not in ansible_skip_tags"
+
+...

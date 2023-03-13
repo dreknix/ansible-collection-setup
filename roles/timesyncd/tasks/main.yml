@@ -1,0 +1,21 @@
+---
+
+- name: Install package "systemd-timesyncd"
+  become: true
+  ansible.builtin.apt:
+    name:
+      - systemd-timesyncd
+    state: present
+
+- name: Write systemd-timesyncd configuration
+  become: true
+  ansible.builtin.template:
+    src: timesyncd-local.conf.j2
+    dest: timesyncd_config_file
+    owner: root
+    group: root
+    mode: "u=rw,go=r"
+    notify:
+      - Restart systemd-timesyncd
+
+...
