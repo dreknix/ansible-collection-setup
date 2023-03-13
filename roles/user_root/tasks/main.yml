@@ -9,14 +9,14 @@
 
 - name: Check if dotfiles are present
   ansible.builtin.stat:
-    path: ~/.cfg
+    path: "{{ ansible_env.HOME }}/.cfg"
   register: dotfiles
 
 - name: Clone root dotfiles
   ansible.builtin.git:
     repo: "{{ user_root_dotfiles }}"
     accept_hostkey: true
-    dest: ~/.cfg
+    dest: "{{ ansible_env.HOME }}/.cfg"
     version: main
     bare: true
   register: gitclone
@@ -25,7 +25,7 @@
 
 - name: Update root dotfiles  # noqa command-instead-of-module
   ansible.builtin.shell: >
-    git --git-dir=~/.cfg --work-tree={{ ansible_env.HOME }} pull
+    git --git-dir="{{ ansible_env.HOME }}/.cfg" --work-tree="{{ ansible_env.HOME }}" pull
   args:
     chdir: "{{ ansible_env.HOME }}"
     executable: /bin/bash
