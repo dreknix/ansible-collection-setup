@@ -35,4 +35,24 @@
   changed_when: '"Already up to date." not in git_pull_dotfiles.stdout'
   when: dotfiles.stat.exists
 
+- name: Add read bash config files in ~/.bashrc
+  ansible.builtin.lineinfile:
+    dest: "{{ ansible_env.HOME }}/.bashrc"
+    regexp: "^for rc in \\${HOME}/.config/dotfiles/bash/"
+    line: "for rc in ${HOME}/.config/dotfiles/bash/*.sh; do source ${rc}; done"
+    state: present
+    insertafter: EOF
+
+- name: Add read config files in ~/.ssh/config
+  ansible.builtin.lineinfile:
+    dest: "{{ ansible_env.HOME }}/.ssh/config"
+    regexp: "^Include ~/.ssh/config.d"
+    line: "Include ~/.ssh/config.d/*"
+    state: present
+    insertbefore: BOF
+    create: true
+    owner: root
+    group: root
+    mode: "u=rw,go=r"
+
 ...
