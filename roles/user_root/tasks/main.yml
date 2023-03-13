@@ -1,0 +1,36 @@
+---
+
+- name: Install package "git"
+  become: true
+  ansible.builtin.apt:
+    name:
+      - git
+    state: present
+
+- name: Check if dotfiles are present
+  ansible.builtin.stat:
+    path: ~/.cfg
+  register: dotfiles
+
+- name: Clone root dotfiles
+  ansible.builtin.git:
+    repo: "{{ user_root_dotfiles }}"
+    accept_hostkey: true
+    dest: ~/.cfg
+    version: main
+    bare: true
+  register: gitclone
+  changed_when: gitclone.changed and gitclone.before == none
+  when: not dotfiles.stat.exists
+
+- name: Update root dotfiles  # noqa command-instead-of-module
+  ansible.builtin.shell: >
+    git --git-dir=~/.cfg --work-tree={{ ansible_env.HOME }} pull
+  args:
+    chdir: "{{ ansible_env.HOME }}"
+    executable: /bin/bash
+  register: git_pull_dotfiles
+  changed_when: '"Already up to date." not in git_pull_dotfiles.stdout'
+  when: dotfiles.stat.exists
+
+...

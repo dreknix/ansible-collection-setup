@@ -90,6 +90,15 @@
               ansible.builtin.include_role:
                 name: dreknix.setup.postfix
 
+        - name: Block dreknix.setup.user_root
+          when: setup_configure_user_root | default(true) | bool
+          tags:
+            - setup_user_root
+          block:
+            - name: Include role dreknix.setup.user_root
+              ansible.builtin.include_role:
+                name: dreknix.setup.user_root
+
         - name: Block dreknix.setup.upgrade
           when: setup_configure_upgrade | default(true) | bool
           tags:
