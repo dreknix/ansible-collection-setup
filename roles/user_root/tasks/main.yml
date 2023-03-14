@@ -51,8 +51,12 @@
     state: present
     insertbefore: BOF
     create: true
-    owner: root
-    group: root
+    mode: "u=rw,go=r"
+
+- name: Configure user in git
+  ansible.builtin.template:
+    src: git-config-user.j2
+    dest: "{{ ansible_env.HOME }}/.config/git/config-user"
     mode: "u=rw,go=r"
 
 ...
