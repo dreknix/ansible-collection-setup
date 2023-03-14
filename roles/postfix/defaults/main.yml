@@ -1,6 +1,6 @@
 ---
 
-postfix_email_root: "admin@example.org"
+postfix_email_root: "{{ user_root_email }}"
 
 postfix_masquerade_domains: "example.org"
 
