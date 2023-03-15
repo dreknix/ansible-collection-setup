@@ -32,7 +32,7 @@
     chdir: "{{ ansible_env.HOME }}"
     executable: /bin/bash
   register: git_pull_dotfiles
-  changed_when: '"is up to date." not in git_pull_dotfiles.stdout'
+  changed_when: '" up to date." not in git_pull_dotfiles.stdout'
   when: dotfiles.stat.exists
 
 - name: Add read bash config files in ~/.bashrc
