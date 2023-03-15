@@ -1,6 +1,8 @@
 ---
 
-timesyncd_config_file: /etc/systemd/timesyncd.conf.d/local.conf
+timesyncd_config_dir: /etc/systemd/timesyncd.conf.d/local.conf
+
+timesyncd_config_file: "{{ timesyncd_config_dir }}/local.conf"
 
 timesyncd_ntp_servers: ntp.example.com
 
