@@ -53,6 +53,12 @@
     create: true
     mode: "u=rw,go=r"
 
+- name: Create git config directory
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.config/git"
+    state: directory
+    mode: "u=rwx,go=rx"
+
 - name: Configure user in git
   ansible.builtin.template:
     src: git-config-user.j2
