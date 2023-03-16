@@ -65,4 +65,41 @@
     dest: "{{ ansible_env.HOME }}/.config/git/config-user"
     mode: "u=rw,go=r"
 
+- name: Install package packages for user root
+  become: true
+  ansible.builtin.apt:
+    name:
+      - apache-utils         # for htpasswd
+      - atop
+      - bash-completion
+      - bc
+      - curl
+      - dnsutils             # for dig,nslookup
+      - dos2unix
+      - git
+      - htop
+      - httpie
+      - iftop
+      - iotop
+      - ipcalc
+      - iperf3
+      - jq
+      - lsof
+      - most
+      - mtr-tiny             # for mtr
+      - net-utils            # for arp
+      - ptop
+      - pwgen
+      - sudo
+      - tmux
+      - tree
+      - unzip
+      - vim
+      - wget
+      - whois                # for mkpasswd
+      - xauth                # enabling ssh -X
+      - zip
+      - zsh
+    state: present
+
 ...
