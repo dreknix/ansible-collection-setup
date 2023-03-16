@@ -87,7 +87,7 @@
       - lsof
       - most
       - mtr-tiny             # for mtr
-      - net-utils            # for arp
+      - net-tools            # for arp
       - ptop
       - pwgen
       - sudo
