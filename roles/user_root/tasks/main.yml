@@ -88,7 +88,6 @@
       - most
       - mtr-tiny             # for mtr
       - net-tools            # for arp
-      - ptop
       - pwgen
       - sudo
       - tmux
