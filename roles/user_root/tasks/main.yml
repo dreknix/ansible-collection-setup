@@ -69,7 +69,7 @@
   become: true
   ansible.builtin.apt:
     name:
-      - apache-utils         # for htpasswd
+      - apache2-utils        # for htpasswd
       - atop
       - bash-completion
       - bc
