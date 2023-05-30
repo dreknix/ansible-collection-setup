@@ -39,7 +39,7 @@
   ansible.builtin.lineinfile:
     dest: "{{ ansible_env.HOME }}/.bashrc"
     regexp: "^for rc in \\${HOME}/.config/dotfiles/bash/"
-    line: "for rc in ${HOME}/.config/dotfiles/bash/*.sh; do source ${rc}; done"
+    line: 'for rc in ${HOME}/.config/dotfiles/bash/*.sh; do [ -f "${rc}" ] && source ${rc}; done'
     state: present
     insertafter: EOF
 
