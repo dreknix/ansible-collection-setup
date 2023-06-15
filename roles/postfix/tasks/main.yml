@@ -3,6 +3,7 @@
 # TODO: - name: Check if 'mailname' is equal to 'hostname --fqdn'
 
 - name: Install package 'postfix' and 'mailutils'
+  become: true
   ansible.builtin.package:
     name:
       - postfix
@@ -10,6 +11,7 @@
     state: present
 
 - name: Update Postfix configuration
+  become: true
   ansible.builtin.lineinfile:
     dest: "{{ postfix_config }}"
     regexp: "{{ item.regexp }}"
@@ -39,6 +41,7 @@
   notify: Restart postfix
 
 - name: Get list of krb5 users for current host
+  become: true
   ansible.builtin.set_fact:
     user_list: "{{
                    krb5_users | default([]) |
@@ -55,6 +58,7 @@
                 }}"
 
 - name: Update Postfix canonical map
+  become: true
   ansible.builtin.template:
     src: canonical.j2
     dest: "{{ postfix_canonical_map }}"
@@ -64,6 +68,7 @@
     - Restart postfix
 
 - name: Update Mailname
+  become: true
   ansible.builtin.template:
     src: mailname.j2
     dest: "{{ postfix_mailname }}"
@@ -72,6 +77,7 @@
     - Restart postfix
 
 - name: Ensure Postfix is started and enabled at boot
+  become: true
   ansible.builtin.service:
     name: postfix
     state: started
