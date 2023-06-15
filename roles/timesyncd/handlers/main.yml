@@ -4,6 +4,7 @@
 # Do not restart systemd-timesyncd in Molecule test
 #
 - name: Restart systemd-timesyncd
+  become: true
   ansible.builtin.service:
     name: systemd-timesyncd
     state: restarted
