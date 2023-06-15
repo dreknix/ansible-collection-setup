@@ -11,79 +11,86 @@
 - name: Set krb5.conf
   become: true
   ansible.builtin.template:
-    src: "krb5.conf.j2"
-    dest: "/etc/krb5.conf"
+    src: 'krb5.conf.j2'
+    dest: '/etc/krb5.conf'
     force: true
-    owner: "root"
-    group: "root"
-    mode: 0644
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
 
-- name: Remove auth lines from /etc/pam.d/common-auth
+- name: Add stronger krb5 auth to /etc/pamd.d/common-auth
+  become: true
+  ansible.builtin.blockinfile:
+    path: '/etc/pam.d/common-auth'
+    marker: '# {mark} ANSIBLE MANGED BLOCK'
+    insertbefore: '^# here are the per-package modules \(the "Primary" block\)'
+    block: |
+      auth        sufficient    pam_unix.so nullok try_first_pass
+      auth        requisite     pam_succeed_if.so gid eq {{ krb5_group_id | default("1000") | int }} quiet
+      auth        sufficient    pam_krb5.so use_first_pass
+
+- name: Remove old auth lines from /etc/pam.d/common-auth
+  become: true
   ansible.builtin.replace:
     path: /etc/pam.d/common-auth
     regexp: '^(auth.*\[(success|default)=.*)'
     replace: '# \1'
 
-- name: Add stronger krb5 auth to /etc/pamd.d/common-auth
-  ansible.builtin.blockinfile:
-    path: /etc/pam.d/common-auth
-    marker: "# {mark} ANSIBLE MANGED BLOCK"
-    insertbefore: "^# here's the fallback if no module succeeds"
-    block: |
-      auth        sufficient    pam_unix.so nullok try_first_pass
-      auth        requisite     pam_succeed_if.so gid eq {{ krb5_group_id | default('1000') | int }} quiet
-      auth        sufficient    pam_krb5.so use_first_pass
-
 - name: Create krb5 user group
+  become: true
   ansible.builtin.group:
-    name: "{{ krb5_group_name | default('krb5user') | string }}"
-    gid: "{{ krb5_group_id | default('1000') | int }}"
+    name: '{{ krb5_group_name | default("krb5user") | string }}'
+    gid: '{{ krb5_group_id | default("1000") | int }}'
     state: present
 
 - name: Change default shell to /bin/bash
+  become: true
   ansible.builtin.lineinfile:
     dest: /etc/default/useradd
-    regexp: "^SHELL="
-    line: "SHELL=/bin/bash"
+    regexp: '^SHELL='
+    line: 'SHELL=/usr/bin/bash'
 
 - name: Get list of krb5 users for current host
   ansible.builtin.set_fact:
-    user_list: "{{
+    user_list: '{{
                    krb5_users | default([]) |
-                     selectattr('hosts', 'equalto', []) |
-                     selectattr('id', 'defined') |
-                     map(attribute='id') |
+                     selectattr("hosts", "equalto", []) |
+                     selectattr("id", "defined") |
+                     map(attribute="id") |
                      list
                    + krb5_users | default([]) |
-                     selectattr('hosts', 'defined') |
-                     selectattr('hosts', 'issuperset', [hostname]) |
-                     selectattr('id', 'defined') |
-                     map(attribute='id') |
+                     selectattr("hosts", "defined") |
+                     selectattr("hosts", "issuperset", [hostname]) |
+                     selectattr("id", "defined") |
+                     map(attribute="id") |
                      list
-                }}"
+                }}'
 
 - name: Create all krb5 users on current host
+  become: true
   ansible.builtin.user:
-    name: "{{ item | string }}"
-    group: "{{ krb5_group_name | default('krb5user') | string }}"
-    comment: "{{ (krb5_users | selectattr('id', 'equalto', item) | list | first).name }}"
+    name: '{{ item | string }}'
+    group: '{{ krb5_group_name | default("krb5user") | string }}'
+    comment: '{{ (krb5_users | selectattr("id", "equalto", item) | list | first).name }}'
     password_lock: true
     create_home: true
     state: present
-  with_items: "{{ user_list }}"
+  with_items: '{{ user_list }}'
 
 - name: Get list of all krb5 users on current host
+  become: true
   ansible.builtin.shell: |
-    set -o pipefail && getent passwd | awk -F: '$4 == {{ krb5_group_id | default('1000') | int }} {print $1}'
+    set -o pipefail && getent passwd | awk -F: '$4 == {{ krb5_group_id | default("1000") | int }} {print $1}'
   args:
     executable: /usr/bin/bash
   register: current_user_list
   changed_when: false
 
 - name: Remove old krb5 users
+  become: true
   ansible.builtin.user:
-    name: "{{ item | string }}"
+    name: '{{ item | string }}'
     state: absent
-  with_items: "{{ current_user_list.stdout_lines | difference(user_list) | list }}"
+  with_items: '{{ current_user_list.stdout_lines | difference(user_list) | list }}'
 
 ...
