@@ -13,9 +13,6 @@
     path: '~{{ ansible_become_user | default("root") }}/.cfg'
   register: dotfiles
 
-- debug:
-    msg: "{{ dotfiles }}"
-
 - name: Clone root dotfiles
   become: true
   ansible.builtin.git:
@@ -35,9 +32,6 @@
   ansible.builtin.stat:
     path: '~{{ ansible_become_user | default("root") }}/.cfg'
   register: dotfiles
-
-- debug:
-    msg: "{{ dotfiles }}"
 
 - name: Setting home directory of root
   ansible.builtin.set_fact:
