@@ -37,15 +37,12 @@
   ansible.builtin.set_fact:
     root_home: '{{ dotfiles.stat.path | dirname }}'
 
-- debug:
-    msg: "{{ root_home }}"
-
 - name: Update root dotfiles  # noqa command-instead-of-module
   become: true
   ansible.builtin.shell: >
-    git --git-dir="{{ root_home }}/.cfg" --work-tree="{{ root_home }}" pull
+    git --git-dir='{{ root_home }}/.cfg' --work-tree='{{ root_home }}' pull
   args:
-    chdir: "{{ root_home }}/"
+    chdir: '{{ root_home }}/'
     executable: /usr/bin/bash
   register: git_pull_dotfiles
   changed_when: '" up to date." not in git_pull_dotfiles.stdout'
@@ -54,8 +51,8 @@
 - name: Add read bash config files in ~/.bashrc
   become: true
   ansible.builtin.lineinfile:
-    dest: "{{ root_home }}/.bashrc"
-    regexp: "^for rc in \\${HOME}/.config/dotfiles/bash/"
+    dest: '{{ root_home }}/.bashrc'
+    regexp: '^for rc in \\${HOME}/.config/dotfiles/bash/'
     line: 'for rc in ${HOME}/.config/dotfiles/bash/*.sh; do [ -f "${rc}" ] && source ${rc}; done'
     state: present
     insertafter: EOF
@@ -63,27 +60,27 @@
 - name: Add read config files in ~/.ssh/config
   become: true
   ansible.builtin.lineinfile:
-    dest: "{{ root_home }}/.ssh/config"
-    regexp: "^Include ~/.ssh/config.d"
-    line: "Include ~/.ssh/config.d/*"
+    dest: '{{ root_home }}/.ssh/config'
+    regexp: '^Include ~/.ssh/config.d'
+    line: 'Include ~/.ssh/config.d/*'
     state: present
     insertbefore: BOF
     create: true
-    mode: "u=rw,go=r"
+    mode: '0644'
 
 - name: Create git config directory
   become: true
   ansible.builtin.file:
-    path: "{{ root_home }}/.config/git"
+    path: '{{ root_home }}/.config/git'
     state: directory
-    mode: "u=rwx,go=rx"
+    mode: '0755'
 
 - name: Configure user in git
   become: true
   ansible.builtin.template:
     src: git-config-user.j2
-    dest: "{{ root_home }}/.config/git/config-user"
-    mode: "u=rw,go=r"
+    dest: '{{ root_home }}/.config/git/config-user'
+    mode: '0644'
 
 - name: Install package packages for user root
   become: true
