@@ -8,15 +8,20 @@
     state: present
 
 - name: Check if dotfiles are present
+  become: true
   ansible.builtin.stat:
-    path: "{{ ansible_env.HOME }}/.cfg"
+    path: '~{{ ansible_become_user | default("root") }}/.cfg'
   register: dotfiles
 
+- debug:
+    msg: "{{ dotfiles }}"
+
 - name: Clone root dotfiles
+  become: true
   ansible.builtin.git:
-    repo: "{{ user_root_dotfiles }}"
+    repo: '{{ user_root_dotfiles }}'
     accept_hostkey: true
-    dest: "{{ ansible_env.HOME }}/.cfg"
+    dest: '~{{ ansible_become_user | default("root") }}/.cfg'
     version: main
     bare: true
   register: gitclone
@@ -25,27 +30,46 @@
   notify:
     - Checkout root dotfiles
 
+- name: Check if dotfiles are created
+  become: true
+  ansible.builtin.stat:
+    path: '~{{ ansible_become_user | default("root") }}/.cfg'
+  register: dotfiles
+
+- debug:
+    msg: "{{ dotfiles }}"
+
+- name: Setting home directory of root
+  ansible.builtin.set_fact:
+    root_home: '{{ dotfiles.stat.path | dirname }}'
+
+- debug:
+    msg: "{{ root_home }}"
+
 - name: Update root dotfiles  # noqa command-instead-of-module
+  become: true
   ansible.builtin.shell: >
-    git --git-dir="{{ ansible_env.HOME }}/.cfg" --work-tree="{{ ansible_env.HOME }}" pull
+    git --git-dir="{{ root_home }}/.cfg" --work-tree="{{ root_home }}" pull
   args:
-    chdir: "{{ ansible_env.HOME }}"
-    executable: /bin/bash
+    chdir: "{{ root_home }}/"
+    executable: /usr/bin/bash
   register: git_pull_dotfiles
   changed_when: '" up to date." not in git_pull_dotfiles.stdout'
   when: dotfiles.stat.exists
 
 - name: Add read bash config files in ~/.bashrc
+  become: true
   ansible.builtin.lineinfile:
-    dest: "{{ ansible_env.HOME }}/.bashrc"
+    dest: "{{ root_home }}/.bashrc"
     regexp: "^for rc in \\${HOME}/.config/dotfiles/bash/"
     line: 'for rc in ${HOME}/.config/dotfiles/bash/*.sh; do [ -f "${rc}" ] && source ${rc}; done'
     state: present
     insertafter: EOF
 
 - name: Add read config files in ~/.ssh/config
+  become: true
   ansible.builtin.lineinfile:
-    dest: "{{ ansible_env.HOME }}/.ssh/config"
+    dest: "{{ root_home }}/.ssh/config"
     regexp: "^Include ~/.ssh/config.d"
     line: "Include ~/.ssh/config.d/*"
     state: present
@@ -54,15 +78,17 @@
     mode: "u=rw,go=r"
 
 - name: Create git config directory
+  become: true
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/.config/git"
+    path: "{{ root_home }}/.config/git"
     state: directory
     mode: "u=rwx,go=rx"
 
 - name: Configure user in git
+  become: true
   ansible.builtin.template:
     src: git-config-user.j2
-    dest: "{{ ansible_env.HOME }}/.config/git/config-user"
+    dest: "{{ root_home }}/.config/git/config-user"
     mode: "u=rw,go=r"
 
 - name: Install package packages for user root
