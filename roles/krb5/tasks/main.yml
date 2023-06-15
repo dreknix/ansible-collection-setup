@@ -71,11 +71,32 @@
   ansible.builtin.user:
     name: '{{ item | string }}'
     group: '{{ krb5_group_name | default("krb5user") | string }}'
+    groups: '{{ "sudo" if item in krb5_sudoers else "" }}'
+    append: true
     comment: '{{ (krb5_users | selectattr("id", "equalto", item) | list | first).name }}'
     password_lock: true
     create_home: true
     state: present
-  with_items: '{{ user_list }}'
+  loop: '{{ user_list }}'
+
+#
+# Set variable 'krb5_authorized_keys':
+# krb5_authorized_keys:
+#   - user 'user1'
+#     public_keys: ssh-ed25519 AAAA...
+#   - user 'user2'
+#     public_keys: |
+#       ssh-ed25519 AAAA...
+#       ssh-ed25519 AAAA...
+#
+- name: Add authorized_key to users
+  become: true
+  ansible.posix.authorized_key:
+    user: '{{ item.user }}'
+    key: '{{ item.public_keys }}'
+  loop: '{{ krb5_authorized_keys | default([]) }}'
+  loop_control:
+    label: '{{ item.user }}'
 
 - name: Get list of all krb5 users on current host
   become: true
@@ -91,6 +112,6 @@
   ansible.builtin.user:
     name: '{{ item | string }}'
     state: absent
-  with_items: '{{ current_user_list.stdout_lines | difference(user_list) | list }}'
+  loop: '{{ current_user_list.stdout_lines | difference(user_list) | list }}'
 
 ...
