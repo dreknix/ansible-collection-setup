@@ -3,7 +3,7 @@
 - name: Checkout root dotfiles
   become: true
   vars:
-    git_parameters: >
+    git_parameters: >-
       --git-dir="{{ root_home }}/.cfg" --work-tree="{{ root_home }}/"
   ansible.builtin.command: "{{ item }}"
   with_items:
