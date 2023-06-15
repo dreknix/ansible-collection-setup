@@ -90,6 +90,7 @@
       - net-tools            # for arp
       - pwgen
       - sudo
+      - tig
       - tmux
       - tree
       - unzip
