@@ -105,6 +105,7 @@
       - most
       - mtr-tiny             # for mtr
       - net-tools            # for arp
+      - nvme-cli
       - pwgen
       - sudo
       - tig
