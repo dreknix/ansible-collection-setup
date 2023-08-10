@@ -11,6 +11,7 @@ ip_addr: "{{
 # Get the FQDN via DNS (if not possible use Ansible facts)
 fqdn: "{{
   lookup('community.general.dig', '{{ ip_addr }}/PTR', real_empty='true', errors='ignore') |
-  default(inventory_hostname + '.' + ansible_dns['search'][0], true) }}"
+  default(inventory_hostname + '.' + ansible_dns['search'][0], true) |
+  regex_replace('[\\.]$', '') }}"
 
 ...
