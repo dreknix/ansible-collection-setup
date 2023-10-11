@@ -126,6 +126,6 @@
     user: '{{ ansible_become_user | default("root") }}'
     state: present
     key: '{{ user_root_public_keys }}'
-    when: user_root_public_keys is defined
+  when: user_root_public_keys is defined
 
 ...
