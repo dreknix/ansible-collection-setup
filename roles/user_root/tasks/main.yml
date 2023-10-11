@@ -120,4 +120,11 @@
       - zsh
     state: present
 
+- name: Ensure SSH keys
+  become: true
+  ansible.posix.authorized_key:
+    user: '{{ ansible_become_user | default("root") }}'
+    state: present
+    key: '{{ lockup("file", "public_keys/root") }}'
+
 ...
