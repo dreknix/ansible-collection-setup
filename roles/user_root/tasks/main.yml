@@ -125,6 +125,7 @@
   ansible.posix.authorized_key:
     user: '{{ ansible_become_user | default("root") }}'
     state: present
-    key: '{{ lookup("file", "public_keys/root") }}'
+    key: '{{ user_root_public_keys }}'
+    when: user_root_public_keys is defined
 
 ...
