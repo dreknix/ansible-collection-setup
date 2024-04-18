@@ -9,8 +9,10 @@ ip_addr: "{{
   default(ansible_default_ipv4.address, true) }}"
 
 # Get the FQDN via DNS (if not possible use Ansible facts)
+# regex_replace(): when getting /etc/hosts entry only use the first
 fqdn: "{{
   lookup('community.general.dig', '{{ ip_addr }}/PTR', real_empty='true', errors='ignore') |
+  regex_replace(',.*$', '') |
   default(inventory_hostname + '.' + ansible_dns['search'][0], true) |
   regex_replace('[\\.]$', '') }}"
 
