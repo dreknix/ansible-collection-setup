@@ -100,7 +100,6 @@
       - iotop
       - ipcalc
       - iperf3
-      - jq
       - lsof
       - most
       - mtr-tiny             # for mtr
@@ -108,8 +107,6 @@
       - nvme-cli
       - pwgen
       - sudo
-      - tig
-      - tmux
       - tree
       - unzip
       - vim
