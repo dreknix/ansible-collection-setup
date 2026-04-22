@@ -106,6 +106,7 @@
       - net-tools            # for arp
       - nvme-cli
       - pwgen
+      - rsync
       - sudo
       - tree
       - unzip
