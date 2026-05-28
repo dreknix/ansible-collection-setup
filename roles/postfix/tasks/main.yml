@@ -72,7 +72,7 @@
 
 - name: Set FQDN for postfix
   ansible.builtin.set_fact:
-    postfix_fqdn: postfix_fqdn_result.stdout
+    postfix_fqdn: "{{ postfix_fqdn_result.stdout }}"
 
 - name: Update Mailname
   become: true
