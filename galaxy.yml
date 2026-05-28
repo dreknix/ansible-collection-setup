@@ -1,5 +1,4 @@
 ---
-
 namespace: dreknix
 name: setup
 version: 1.0.0
@@ -22,5 +21,4 @@ dependencies: {}
 repository: https://github.com/dreknix/ansible-collection-setup
 
 build_ignore: []
-
 ...

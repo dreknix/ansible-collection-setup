@@ -14,5 +14,6 @@
   become: true
   ansible.builtin.command:
     "postmap {{ postfix_database_type }}:{{ postfix_canonical_map }}"
+  changed_when: false
 
 ...

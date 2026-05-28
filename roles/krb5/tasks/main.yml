@@ -52,7 +52,7 @@
 
 - name: Get list of krb5 users for current host
   ansible.builtin.set_fact:
-    user_list: '{{
+    krb5_user_list: '{{
                    krb5_users | default([]) |
                      selectattr("hosts", "equalto", []) |
                      selectattr("id", "defined") |
@@ -75,9 +75,10 @@
     append: true
     comment: '{{ (krb5_users | selectattr("id", "equalto", item) | list | first).name }}'
     password_lock: true
+    home: '{{ krb5_home_dir | default("/home") | string }}/{{ item | string }}'
     create_home: true
     state: present
-  loop: '{{ user_list }}'
+  loop: '{{ krb5_user_list }}'
 
 #
 # Set variable 'krb5_authorized_keys':
@@ -104,7 +105,7 @@
     set -o pipefail && getent passwd | awk -F: '$4 == {{ krb5_group_id | default("1000") | int }} {print $1}'
   args:
     executable: /usr/bin/bash
-  register: current_user_list
+  register: krb5_current_user_list
   changed_when: false
 
 - name: Remove old krb5 users
@@ -112,6 +113,6 @@
   ansible.builtin.user:
     name: '{{ item | string }}'
     state: absent
-  loop: '{{ current_user_list.stdout_lines | difference(user_list) | list }}'
+  loop: '{{ krb5_current_user_list.stdout_lines | difference(krb5_user_list) | list }}'
 
 ...

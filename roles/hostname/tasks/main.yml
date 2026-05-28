@@ -20,7 +20,7 @@
   ansible.builtin.lineinfile:
     dest: /etc/hosts
     regexp: "^{{ ip_addr | replace('.', '\\.') }}"
-    line: "{{ ip_addr }}{{ '\t' }}{{ fqdn }}{{ '\t' }}{{ hostname }}"
+    line: "{{ [ip_addr, fqdn, hostname] | join('\t') }}"
     state: present
   when: "'notest' not in ansible_skip_tags"
 

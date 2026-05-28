@@ -11,7 +11,7 @@
   become: true
   ansible.builtin.stat:
     path: '~{{ ansible_become_user | default("root") }}/.cfg'
-  register: dotfiles
+  register: user_root_dotfiles_present
 
 - name: Clone root dotfiles
   become: true
@@ -21,9 +21,9 @@
     dest: '~{{ ansible_become_user | default("root") }}/.cfg'
     version: main
     bare: true
-  register: gitclone
-  changed_when: gitclone.changed and gitclone.before == none
-  when: not dotfiles.stat.exists
+  register: user_root_gitclone
+  changed_when: user_root_gitclone.changed and user_root_gitclone.before == none
+  when: not user_root_dotfiles_present.stat.exists
   notify:
     - Checkout root dotfiles
 
@@ -31,22 +31,22 @@
   become: true
   ansible.builtin.stat:
     path: '~{{ ansible_become_user | default("root") }}/.cfg'
-  register: dotfiles
+  register: user_root_dotfiles_present
 
 - name: Setting home directory of root
   ansible.builtin.set_fact:
-    root_home: '{{ dotfiles.stat.path | dirname }}'
+    user_root_home: '{{ dotfiles.stat.path | dirname }}'
 
 - name: Update root dotfiles  # noqa command-instead-of-module
   become: true
   ansible.builtin.shell: >
-    git --git-dir='{{ root_home }}/.cfg' --work-tree='{{ root_home }}' pull
+    git --git-dir='{{ user_root_home }}/.cfg' --work-tree='{{ user_root_home }}' pull
   args:
-    chdir: '{{ root_home }}/'
+    chdir: '{{ user_root_home }}/'
     executable: /usr/bin/bash
-  register: git_pull_dotfiles
-  changed_when: '" up to date." not in git_pull_dotfiles.stdout'
-  when: dotfiles.stat.exists
+  register: user_root_git_pull_dotfiles
+  changed_when: '" up to date." not in user_root_git_pull_dotfiles.stdout'
+  when: user_root_user_root_dotfiles_present.stat.exists
 
 - name: Add read bash config files in ~/.bashrc
   become: true
