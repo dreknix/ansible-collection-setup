@@ -1,0 +1,6 @@
+---
+- name: Restart application service
+  ansible.builtin.reboot:
+    reboot_timeout: 0
+  listen: "Reboot host"
+...
