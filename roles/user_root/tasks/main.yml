@@ -31,11 +31,11 @@
   become: true
   ansible.builtin.stat:
     path: '~{{ ansible_become_user | default("root") }}/.cfg'
-  register: user_root_dotfiles_present
+  register: user_root_dotfiles_directory
 
 - name: Setting home directory of root
   ansible.builtin.set_fact:
-    user_root_home: '{{ dotfiles.stat.path | dirname }}'
+    user_root_home: '{{ user_root_dotfiles_directory.stat.path | dirname }}'
 
 - name: Update root dotfiles  # noqa command-instead-of-module
   become: true
@@ -46,7 +46,7 @@
     executable: /usr/bin/bash
   register: user_root_git_pull_dotfiles
   changed_when: '" up to date." not in user_root_git_pull_dotfiles.stdout'
-  when: user_root_user_root_dotfiles_present.stat.exists
+  when: user_root_dotfiles_directory.stat.exists
 
 - name: Add read bash config files in ~/.bashrc
   become: true
