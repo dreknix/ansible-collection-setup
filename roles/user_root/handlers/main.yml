@@ -4,7 +4,7 @@
   become: true
   vars:
     git_parameters: >-
-      --git-dir="{{ root_home }}/.cfg" --work-tree="{{ root_home }}/"
+      --git-dir="{{ user_root_home }}/.cfg" --work-tree="{{ user_root_home }}/"
   ansible.builtin.command: "{{ item }}"
   with_items:
     - git {{ git_parameters }} checkout
