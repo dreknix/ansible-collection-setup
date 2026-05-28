@@ -1,4 +1,4 @@
 root {{ postfix_email_root }}
-{% for user in user_list %}
+{% for user in postfix_user_list %}
 {{ user }} {{ (krb5_users | selectattr('id', 'equalto', user) | list | first).email }}
 {% endfor %}
