@@ -67,6 +67,15 @@
     - Update canonical_map with postmap
     - Restart postfix
 
+- name: Get FQDN for postfix
+  ansible.builtin.command: hostname --fqdn
+  register: postfix_fqdn_result
+  changed_when: false
+
+- name: Set FQDN for postfix
+  ansible.builtin.set_fact:
+    postfix_fqdn: postfix_fqdn_result.stdout
+
 - name: Update Mailname
   become: true
   ansible.builtin.template:
