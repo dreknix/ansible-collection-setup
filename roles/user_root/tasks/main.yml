@@ -51,7 +51,7 @@
 - name: Add read bash config files in ~/.bashrc
   become: true
   ansible.builtin.lineinfile:
-    dest: '{{ root_home }}/.bashrc'
+    dest: '{{ user_root_home }}/.bashrc'
     regexp: '^for rc in \\${HOME}/.config/dotfiles/bash/'
     line: 'for rc in ${HOME}/.config/dotfiles/bash/*.sh; do [ -f "${rc}" ] && source ${rc}; done'
     state: present
@@ -60,7 +60,7 @@
 - name: Add read config files in ~/.ssh/config
   become: true
   ansible.builtin.lineinfile:
-    dest: '{{ root_home }}/.ssh/config'
+    dest: '{{ user_root_home }}/.ssh/config'
     regexp: '^Include ~/.ssh/config.d'
     line: 'Include ~/.ssh/config.d/*'
     state: present
@@ -71,7 +71,7 @@
 - name: Create git config directory
   become: true
   ansible.builtin.file:
-    path: '{{ root_home }}/.config/git'
+    path: '{{ user_root_home }}/.config/git'
     state: directory
     mode: '0755'
 
@@ -79,7 +79,7 @@
   become: true
   ansible.builtin.template:
     src: git-config-user.j2
-    dest: '{{ root_home }}/.config/git/config-user'
+    dest: '{{ user_root_home }}/.config/git/config-user'
     mode: '0644'
 
 - name: Install package packages for user root
