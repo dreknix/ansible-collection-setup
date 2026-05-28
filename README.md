@@ -79,7 +79,7 @@ Set the time zone.
 
 * **Tag**: `setup_timezone`
 * **Variables**:
-  * `timezone`: `Europe/London`
+  * `timezone_default`: `Europe/London`
 
 ### Upgrade
 
