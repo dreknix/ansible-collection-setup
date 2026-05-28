@@ -12,7 +12,7 @@
     - git {{ git_parameters }} config --local user.name {{ user_root_name }}
     - git {{ git_parameters }} config --local user.email {{ user_root_email }}
     - git {{ git_parameters }} push --set-upstream origin main
-  when: gitclone.changed and gitclone.before == none
+  when: user_root_gitclone.changed and user_root_gitclone.before == none
   changed_when: false
 
 ...
