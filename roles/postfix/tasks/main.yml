@@ -1,7 +1,5 @@
 ---
 
-# TODO: - name: Check if 'mailname' is equal to 'hostname --fqdn'
-
 - name: Install package 'postfix' and 'mailutils'
   become: true
   ansible.builtin.package:
