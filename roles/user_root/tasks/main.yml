@@ -93,9 +93,9 @@
       - curl
       - dnsutils             # for dig,nslookup
       - dos2unix
+      - emacs-nox
       - git
       - htop
-      - httpie
       - iftop
       - iotop
       - ipcalc
@@ -105,6 +105,10 @@
       - mtr-tiny             # for mtr
       - net-tools            # for arp
       - nvme-cli
+      - python3-pip
+      - python3-venv
+      - python3-virtualenv
+      - python3-wheel
       - pwgen
       - rsync
       - sudo
@@ -116,6 +120,7 @@
       - xauth                # enabling ssh -X
       - zip
       - zsh
+      - zplug
     state: present
 
 - name: Ensure SSH keys
