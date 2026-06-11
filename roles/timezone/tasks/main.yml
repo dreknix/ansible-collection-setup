@@ -9,7 +9,7 @@
 - name: Configure timezone
   become: true
   community.general.timezone:
-    name: "{{ timezone_default }}"
+    name: "{{ timezone | default(timezone_default) }}"
   notify: Reboot host
 
 ...
