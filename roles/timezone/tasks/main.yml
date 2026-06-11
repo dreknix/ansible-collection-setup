@@ -22,6 +22,7 @@
   register: timezone_etc
 
 - name: Write timezone into /etc/timezone if it exists
+  become: true
   ansible.builtin.copy:
     content: "{{ timezone | default(timezone_default) }}\n"
     dest: /etc/timezone
