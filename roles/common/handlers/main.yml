@@ -1,5 +1,5 @@
 ---
-- name: Restart application service
+- name: Reboot target machine
   become: true
   ansible.builtin.reboot:
     msg: "Reboot initiated by Ansible due to config change"
