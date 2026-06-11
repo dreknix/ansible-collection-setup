@@ -12,4 +12,22 @@
     name: "{{ timezone | default(timezone_default) }}"
   notify: Reboot host
 
+#
+# /etc/timezone - is currently obsolete and will be removed
+#
+
+- name: Check whether /etc/timezone exists
+  ansible.builtin.stat:
+    path: /etc/timezone
+  register: timezone_etc
+
+- name: Write timezone into /etc/timezone if it exists
+  ansible.builtin.copy:
+    content: "{{ timezone | default(timezone_default) }}\n"
+    dest: /etc/timezone
+    owner: root
+    group: root
+    mode: "0644"
+  when: timezone_etc.stat.exists
+
 ...
