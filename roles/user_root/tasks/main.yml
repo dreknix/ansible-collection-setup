@@ -90,6 +90,7 @@
       - atop
       - bash-completion
       - bc
+      - btop
       - curl
       - dnsutils             # for dig,nslookup
       - dos2unix
