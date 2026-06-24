@@ -1,6 +1,6 @@
 ---
 
-- name: Install package ""
+- name: Install package "chrony"
   become: true
   ansible.builtin.apt:
     name:
