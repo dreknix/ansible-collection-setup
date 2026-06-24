@@ -1,0 +1,21 @@
+---
+
+- name: Install package ""
+  become: true
+  ansible.builtin.apt:
+    name:
+      - chrony
+    state: present
+
+- name: Write chronyd sources
+  become: true
+  ansible.builtin.template:
+    src: ansible-ntp-servers.sources.j2
+    dest: "{{ chronyd_sources_file }}"
+    owner: root
+    group: root
+    mode: "u=rw,go=r"
+  notify:
+    - Reload chronyd sources
+
+...

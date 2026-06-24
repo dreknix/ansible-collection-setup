@@ -1,0 +1,12 @@
+---
+
+#
+# Do not reload chronyd in Molecule test
+#
+- name: Reload chronyd sources
+  become: true
+  ansible.builtin.command: chronyc reload sources
+  changed_when: false
+  when: "'notest' not in ansible_skip_tags"
+
+...

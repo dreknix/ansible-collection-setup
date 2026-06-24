@@ -1,0 +1,5 @@
+{{ ansible_managed | comment }}
+
+{% for chronyd_ntp_server in chronyd_ntp_servers %}
+{{ chronyd_ntp_source_type }} {{ chronyd_ntp_server }} {{ chronyd_ntp_server_args }} minpoll={{ chronyd_ntp_server_minpoll }} maxpoll={{ chronyd_ntp_server_maxpoll }}
+{% endfor }

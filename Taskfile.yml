@@ -1,14 +1,13 @@
 ---
 # https://taskfile.dev
 
-version: '3'
+version: "3"
 
 vars:
   PLAYBOOK: dreknix.setup.playbook
   EXTRA_VARS: -e 'target=all'
 
 tasks:
-
   lint:
     desc: Check syntax of the playbook
     cmds:
@@ -58,6 +57,18 @@ tasks:
     cmds:
       - ansible-playbook {{.EXTRA_VARS}} --tag setup_timezone {{.PLAYBOOK}}
 
+  run:timesyncd:
+    desc: Run {{.PLAYBOOK}} with tag timesyncd
+    deps: [lint]
+    cmds:
+      - ansible-playbook {{.EXTRA_VARS}} --tag setup_timesyncd {{.PLAYBOOK}}
+
+  run:chronyd:
+    desc: Run {{.PLAYBOOK}} with tag chronyd
+    deps: [lint]
+    cmds:
+      - ansible-playbook {{.EXTRA_VARS}} --tag setup_chronyd {{.PLAYBOOK}}
+
   run:upgrade:
     desc: Run {{.PLAYBOOK}} with tag upgrade
     deps: [lint]
@@ -98,5 +109,4 @@ tasks:
     cmds:
       # $ task molecule:test -- --debug -> CLI_ARGS=--debug
       - molecule {{.CLI_ARGS}} test
-
 ...

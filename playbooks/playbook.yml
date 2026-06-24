@@ -63,6 +63,16 @@
               ansible.builtin.include_role:
                 name: dreknix.setup.timesyncd
 
+        - name: Block dreknix.setup.chronyd
+          when: setup_configure_chronyd | default(true) | bool
+                and 'chronyd_clients' in group_names
+          tags:
+            - setup_chronyd
+          block:
+            - name: Include role dreknix.setup.chronyd
+              ansible.builtin.include_role:
+                name: dreknix.setup.chronyd
+
         - name: Block dreknix.setup.sshd
           when: setup_configure_sshd | default(true) | bool
           tags:

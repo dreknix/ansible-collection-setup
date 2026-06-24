@@ -1,0 +1,16 @@
+---
+chronyd_config_dir: /etc/chrony
+
+chronyd_sources_dir: "{{ chronyd_config_dir }}/sources.d"
+
+chronyd_config_file: "{{ chronyd_sources_dir }}/ansible-ntp-servers.sources"
+
+chronyd_ntp_servers:
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+
+chronyd_ntp_source_type: server
+chronyd_ntp_server_args: iburst
+chronyd_ntp_server_minpoll: 6
+chronyd_ntp_server_maxpoll: 10
+...
