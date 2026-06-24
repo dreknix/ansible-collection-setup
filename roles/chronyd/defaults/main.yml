@@ -3,7 +3,7 @@ chronyd_config_dir: /etc/chrony
 
 chronyd_sources_dir: "{{ chronyd_config_dir }}/sources.d"
 
-chronyd_config_file: "{{ chronyd_sources_dir }}/ansible-ntp-servers.sources"
+chronyd_sources_file: "{{ chronyd_sources_dir }}/ansible-ntp-servers.sources"
 
 chronyd_ntp_servers:
   - 0.pool.ntp.org
