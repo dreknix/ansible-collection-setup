@@ -1,6 +1,15 @@
 ---
 
 #
+# Do not reload systemd
+#
+- name: Reload systemd
+  become: true
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+  when: "'notest' not in ansible_skip_tags"
+
+#
 # Do not restart SSH server in Molecule test
 #
 - name: Restart openssh-server

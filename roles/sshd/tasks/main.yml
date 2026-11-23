@@ -7,6 +7,28 @@
       - openssh-server
     state: present
 
+- name: Create sshd systemd drop-in directory
+  become: true
+  ansible.builtin.file:
+    path: "/etc/systemd/system/sshd.service.d"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Make sshd wait for network-online.target
+  become: true
+  ansible.builtin.copy:
+    dest: "/etc/systemd/system/sshd.service.d/network-online.conf"
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      [Unit]
+      Wants=network-online.target
+      After=network-online.target
+  notify: Reload systemd
+
 - name: Ensure ssh_config.d config files is enabled
   become: true
   ansible.builtin.lineinfile:
